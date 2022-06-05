@@ -1,0 +1,18 @@
+[
+    {
+        "email": "testuser@email.com",
+        "fullName": "test user",
+        "verificationToken": null,
+        "verified": true,
+        "forgotPasswordToken": null,
+        "role": "User"
+    },
+    {
+        "email": "testuser1@email.com",
+        "fullName": "test user1",
+        "verificationToken": null,
+        "verified": false,
+        "forgotPasswordToken": null,
+        "role": "User"
+    }
+]
