@@ -1,7 +1,8 @@
 [
     {
         "email": "testuser@email.com",
-        "fullName": "test user",
+        "firtName": "test user",
+        "lastName": "test user",
         "verificationToken": null,
         "verified": true,
         "forgotPasswordToken": null,
@@ -9,7 +10,8 @@
     },
     {
         "email": "testuser1@email.com",
-        "fullName": "test user1",
+        "firstName": "test user1",
+        "lastName": "test user1",
         "verificationToken": null,
         "verified": false,
         "forgotPasswordToken": null,

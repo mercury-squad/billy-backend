@@ -45,7 +45,8 @@ changePassword.schema = {
  */
 async function updateProfile(userId, entity) {
   const user = await helper.ensureEntityExists(models.User, { _id: userId }, "Sorry, the user doesn't exist!");
-  user.fullName = entity.fullName;
+  user.firstName = entity.firstName;
+  user.lastName = entity.lastName;
   await user.save();
   return user;
 }
@@ -55,7 +56,11 @@ updateProfile.schema = {
   entity: joi
     .object()
     .keys({
-      fullName: joi
+      firstName: joi
+        .string()
+        .regex(/^([a-zA-Z, .'-]){3,30}$/i)
+        .required(),
+      lastName: joi
         .string()
         .regex(/^([a-zA-Z, .'-]){3,30}$/i)
         .required(),

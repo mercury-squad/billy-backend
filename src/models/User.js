@@ -12,7 +12,8 @@ const Schema = require('mongoose').Schema;
 
 const UserSchema = new Schema({
   email: { type: String, unique: true, required: true },
-  fullName: { type: String, required: true },
+  firstName: { type: String, required: true },
+  lastName: { type: String, required: true },
   passwordHash: { type: String },
   verificationToken: { type: String },
   accessToken: { type: String },
