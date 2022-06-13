@@ -9,6 +9,8 @@
  * @version     1.0
  */
 
+require('dotenv').config();
+
 require('./src/bootstrap');
 
 const config = require('config');
