@@ -53,7 +53,13 @@ _.each(routes, (verbs, url) => {
         })
       );
 
-      actions.push((req, res, next) => {
+      actions.push(async (req, res, next) => {
+        const user = await models.User.findOne({
+          email: req.auth?.email,
+        });
+        // setting user manually since the credentials are saved in 
+        // req.auth instead of req.user
+        req.user = user;
         if (!req.user) {
           return next(new errors.AuthenticationRequiredError('Authorization failed.'));
         }

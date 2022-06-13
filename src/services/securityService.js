@@ -26,10 +26,11 @@ const UtilityService = require('../services/UtilityService');
  * @returns {Object} the user information with token
  */
 async function login(entity) {
+  const email = entity.email.toLowerCase();
   let user = await helper.ensureEntityExists(
     models.User,
-    { email: entity.email },
-    `Sorry, we could not find any user with the email address ${entity.email} registered with us.`
+    { email },
+    `Sorry, we could not find any user with the email address ${email} registered with us.`
   );
 
   const matched = await helper.validateHash(entity.password, user.passwordHash);
@@ -68,18 +69,29 @@ login.schema = {
  * @returns {Object} the sign user information
  */
 async function signUp(entity) {
-  let user = await getUserByEmail(entity.email);
+  
+  const email = entity.email.toLowerCase();
+  let user = await getUserByEmail(email);
   if (user) {
-    throw new errors.HttpStatusError(httpStatus.CONFLICT, `email ${entity.email} already exists`);
+    throw new errors.HttpStatusError(httpStatus.CONFLICT, `email ${email} already exists`);
   }
   const verificationToken = helper.getRandomString(25);
   const passwordHash = await helper.hashString(entity.password);
+
+  // generate JWT token
+  const token = jwt.sign({email}, config.JWT_SECRET, {
+    expiresIn: config.JWT_EXPIRATION,
+  });
+
   user = _.extend(entity, {
-    email: entity.email,
+    email,
     passwordHash,
     verificationToken,
-    fullName: entity.fullName,
+    firstName: entity.firstName,
+    lastName: entity.lastName,
     role: entity.role,
+    verified: true,
+    accessToken: token
   });
   user = new models.User(user);
   await user.save();
@@ -99,7 +111,11 @@ signUp.schema = {
     .object()
     .keys({
       email: joi.string().email().required(),
-      fullName: joi
+      firstName: joi
+        .string()
+        .regex(/^([a-zA-Z, .'-]){3,30}$/i)
+        .required(),
+      lastName: joi
         .string()
         .regex(/^([a-zA-Z, .'-]){3,30}$/i)
         .required(),
@@ -107,7 +123,7 @@ signUp.schema = {
         .string()
         .regex(/^\w{5,15}$/)
         .required(),
-      confirmPassword: joi.string().required(),
+      // confirmPassword: joi.string().required(),
     })
     .required(),
 };
