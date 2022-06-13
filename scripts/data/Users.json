@@ -5,8 +5,7 @@
         "lastName": "test user",
         "verificationToken": null,
         "verified": true,
-        "forgotPasswordToken": null,
-        "role": "User"
+        "forgotPasswordToken": null
     },
     {
         "email": "testuser1@email.com",
@@ -14,7 +13,6 @@
         "lastName": "test user1",
         "verificationToken": null,
         "verified": false,
-        "forgotPasswordToken": null,
-        "role": "User"
+        "forgotPasswordToken": null
     }
 ]

@@ -20,7 +20,6 @@ const UserSchema = new Schema({
   verified: { type: Boolean },
   forgotPasswordToken: { type: String },
   lastLoginAt: { type: Date },
-  role: { type: String },
 });
 
 module.exports = {

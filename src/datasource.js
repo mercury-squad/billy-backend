@@ -27,6 +27,7 @@ function getDb(url, poolSize) {
   if (!dbs[url]) {
     const db = mongoose.createConnection(uri, {
       useNewUrlParser: true,
+      useUnifiedTopology: true,
     });
     dbs[url] = db;
   }
