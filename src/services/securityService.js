@@ -86,8 +86,7 @@ async function signUp(entity) {
 
   // send an email
   try {
-    // will be enabled soon
-    // await sendVerificationEmail(user.email, verificationToken, helper.getFrontendUrl());
+    await sendVerificationEmail(user.email, verificationToken, helper.getFrontendUrl());
   } catch (ex) {
     await user.remove();
     throw ex;
@@ -259,7 +258,7 @@ async function sendVerificationEmail(email, verificationToken, frontendUrl) {
     `${frontendUrl}/confirmEmail?verificationToken=${verificationToken}&email=${email}`
   );
   const emailEntity = {
-    subject: 'Verify Email Address on auto.dox',
+    subject: 'Verify Email Address on Billy',
     to: email,
     html: emailContent,
   };
