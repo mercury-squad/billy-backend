@@ -81,11 +81,6 @@ async function signUp(entity) {
   const verificationToken = helper.getRandomString(25);
   const passwordHash = await helper.hashString(entity.password);
 
-  // generate JWT token
-  const token = jwt.sign({ email }, config.JWT_SECRET, {
-    expiresIn: config.JWT_EXPIRATION,
-  });
-
   user = _.extend(entity, {
     email,
     passwordHash,
@@ -93,7 +88,6 @@ async function signUp(entity) {
     firstName: entity.firstName,
     lastName: entity.lastName,
     verified: false,
-    accessToken: token,
   });
   user = new models.User(user);
   await user.save();
