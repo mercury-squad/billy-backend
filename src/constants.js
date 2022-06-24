@@ -17,10 +17,29 @@ const Roles = {
   user: 'User',
 };
 
+/**
+ * the invoice status
+ */
+const InvoiceStatus = {
+  draft: 'draft',
+  scheduled: 'scheduled',
+  sent: 'sent',
+};
+
+/**
+ * the project status
+ */
+const ProjectStatus = {
+  open: 'open',
+  closed: 'closed',
+};
+
 // default data fetch limit
 const DefaultQueryLimit = 10;
 
 module.exports = {
   DefaultQueryLimit,
   Roles,
+  InvoiceStatus,
+  ProjectStatus,
 };

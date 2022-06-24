@@ -2,6 +2,8 @@
  * Copyright (C) Mercury Squad
  */
 
+const { InvoiceStatus } = require('../constants');
+
 /**
  * the Invoice schema
  * @author      Mercury Squad
@@ -12,7 +14,7 @@ const Schema = require('mongoose').Schema;
 
 const InvoiceSchema = new Schema(
   {
-    status: { type: String, enum: ['draft', 'scheduled', 'sent'] },
+    status: { type: String, enum: [InvoiceStatus.draft, InvoiceStatus.scheduled, InvoiceStatus.sent] },
     genetatedDate: { type: Date },
     project: { type: Schema.Types.ObjectId, ref: 'Project' },
     items: { type: Array },
@@ -21,7 +23,8 @@ const InvoiceSchema = new Schema(
     paymentStatus: { type: String },
     paymentMethod: { type: String },
   },
-  { timestamps: true }
+  { timestamps: true },
+  { versionKey: false }
 );
 
 module.exports = {

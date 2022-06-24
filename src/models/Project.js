@@ -2,6 +2,8 @@
  * Copyright (C) Mercury Squad
  */
 
+const { ProjectStatus } = require('../constants');
+
 /**
  * the Project schema
  * @author      Mercury Squad
@@ -18,7 +20,7 @@ const ProjectSchema = new Schema(
     user: { type: Schema.Types.ObjectId, ref: 'User' },
     startDate: { type: Date },
     endDate: { type: String },
-    status: { type: String, enum: ['open', 'closed'] },
+    status: { type: String, enum: [ProjectStatus.open, ProjectStatus.closed] },
     rate: { type: Number },
   },
   { timestamps: true }

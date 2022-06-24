@@ -15,8 +15,9 @@ const _ = require('lodash');
 const config = require('config');
 const multer = require('multer');
 const errors = require('common-errors');
-const securityRoute = require('./securityRoute');
+const securityRoutes = require('./securityRoutes');
 const UserRoutes = require('./UserRoutes');
+const InvoiceRoutes = require('./invoiceRoutes');
 const helper = require('../common/helper');
 const logger = require('../common/logger');
 const models = require('../models');
@@ -26,7 +27,8 @@ const upload = multer({
 });
 
 const apiRouter = express.Router();
-const routes = _.extend({}, securityRoute, UserRoutes);
+
+const routes = _.extend({}, securityRoutes, UserRoutes, InvoiceRoutes);
 
 // load all routes
 _.each(routes, (verbs, url) => {
@@ -57,7 +59,7 @@ _.each(routes, (verbs, url) => {
         const user = await models.User.findOne({
           email: req.auth?.email,
         });
-        // setting user manually since the credentials are saved in 
+        // setting user manually since the credentials are saved in
         // req.auth instead of req.user
         req.user = user;
         if (!req.user) {
