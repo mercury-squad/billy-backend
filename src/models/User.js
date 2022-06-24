@@ -10,17 +10,26 @@
 
 const Schema = require('mongoose').Schema;
 
-const UserSchema = new Schema({
-  email: { type: String, unique: true, required: true },
-  firstName: { type: String, required: true },
-  lastName: { type: String, required: true },
-  passwordHash: { type: String },
-  verificationToken: { type: String },
-  accessToken: { type: String },
-  verified: { type: Boolean },
-  forgotPasswordToken: { type: String },
-  lastLoginAt: { type: Date },
-});
+const UserSchema = new Schema(
+  {
+    email: { type: String, unique: true, required: true },
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
+    address: { type: String },
+    companyName: { type: String },
+    businessLogo: { type: String },
+    profileLogo: { type: String },
+    website: { type: String },
+    paymentOptions: { type: [{ type: String }] },
+    passwordHash: { type: String },
+    verificationToken: { type: String },
+    accessToken: { type: String },
+    verified: { type: Boolean },
+    forgotPasswordToken: { type: String },
+    lastLoginAt: { type: Date },
+  },
+  { timestamps: true }
+);
 
 module.exports = {
   UserSchema,
