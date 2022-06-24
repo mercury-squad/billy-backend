@@ -10,6 +10,7 @@
  */
 
 const securityService = require('../services/securityService');
+
 /**
  * user login with email password
  * @param req the http request

@@ -9,7 +9,7 @@
  * @version     1.0
  */
 
-const UserService = require('../services/UserService');
+const UserService = require('../services/userService');
 
 /**
  * handles the change password

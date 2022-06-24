@@ -123,7 +123,6 @@ signUp.schema = {
         .string()
         .regex(/^\w{5,15}$/)
         .required(),
-      confirmPassword: joi.string().required(),
     })
     .required(),
 };

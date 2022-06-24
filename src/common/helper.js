@@ -180,6 +180,7 @@ async function ensureValueIsUnique(model, query, value) {
     throw new errors.HttpStatusError(httpStatus.CONFLICT, `${value} already exists`);
   }
 }
+
 /**
  * checks if user has entity access or not
  * @param {Object} model the model
