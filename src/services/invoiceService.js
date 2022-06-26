@@ -17,11 +17,14 @@ const { InvoiceStatus } = require('../constants');
 
 /**
  * handles create invoice
+ * @param {Object} authUser the authenticated user
  * @param {Object} entity the entity
  * @returns {Object} the invoice
  */
-async function create(entity) {
-  let newEntity = _.extend(entity, {}); //add anything extra to the incoming body
+async function create(authUser, entity) {
+  let newEntity = _.extend(entity, {
+    user: authUser.id,
+  }); //add anything extra to the incoming body
 
   // check if any invoice with invoice number already exists may be?
   // await helper.ensureValueIsUnique(Invoice, { invoiceNumber: entity.invoiceNumber }, entity.invoiceNumber);
@@ -34,9 +37,9 @@ async function create(entity) {
 }
 
 create.schema = {
+  authUser: joi.object().required(),
   entity: joi
     .object()
-    // have to enable the keys here
     // .keys({
     // status: joi.string().required().valid([InvoiceStatus.draft, InvoiceStatus.scheduled, InvoiceStatus.sent]),
     // have to add other validations here
@@ -45,17 +48,54 @@ create.schema = {
 };
 
 /**
- * get all invoices
- * @returns {Array} the invoice
+ * get all invoices based on the filters
+ * @returns {Array} the invoices
  */
-async function search() {
-  let invoices = await Invoice.find({});
-  // invoices = _.map(invoices, _.partialRight(_.omit, '__v'));
+async function search(criteria) {
+  const filter = {};
 
-  return _.orderBy(invoices, ['name'], ['asc']);
+  // Keyword search
+  if (criteria.keyword) {
+    filter.$or = [
+      { projectName: { $regex: criteria.keyword, $options: 'i' } },
+      { invoiceNumber: { $regex: criteria.keyword, $options: 'i' } },
+    ];
+  }
+
+  // for sorting, add second sorting by _id if sortBy is not id, so that result order is determined
+  if (criteria.sortBy === 'id') {
+    criteria.sortBy = '_id';
+  }
+
+  let sortStr = `${criteria.sortOrder.toLowerCase() === 'asc' ? '' : '-'}${criteria.sortBy}`;
+
+  if (criteria.sortBy !== '_id') {
+    sortStr += ' _id';
+  }
+
+  const results = await Invoice.find(filter)
+    .sort(sortStr)
+    .populate(['user'])
+    .skip((criteria.page - 1) * criteria.perPage)
+    .limit(criteria.perPage);
+
+  return {
+    total: await Invoice.countDocuments(filter),
+    results,
+    page: criteria.page,
+    perPage: criteria.perPage,
+  };
 }
 
-search.schema = {};
+search.schema = {
+  criteria: joi.object().keys({
+    keyword: joi.string().trim(),
+    page: joi.page(),
+    perPage: joi.perPage(),
+    sortBy: joi.string().valid('name', 'status', 'paymentStatus').default('externalId'),
+    sortOrder: joi.sortOrder(),
+  }),
+};
 
 /**
  * get invoice by id
@@ -111,11 +151,7 @@ async function update(id, entity) {
 
 update.schema = {
   id: joi.string().required(),
-  entity: joi
-    .object()
-    // have to enable the keys here
-    // .keys({})
-    .required(),
+  entity: joi.object().keys({}).required(),
 };
 
 module.exports = {

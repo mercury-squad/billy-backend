@@ -17,7 +17,7 @@ const InvoiceService = require('../services/invoiceService');
  * @param {Object} res the http response
  */
 async function create(req, res) {
-  res.json(await InvoiceService.create(req.body));
+  res.json(await InvoiceService.create(req.user, req.body));
 }
 
 /**
@@ -26,7 +26,7 @@ async function create(req, res) {
  * @param {Object} res the http response
  */
 async function search(req, res) {
-  res.json(await InvoiceService.search());
+  res.json(await InvoiceService.search(req.query));
 }
 
 /**
