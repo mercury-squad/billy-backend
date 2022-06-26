@@ -28,7 +28,21 @@ const UserSchema = new Schema(
     forgotPasswordToken: { type: String },
     lastLoginAt: { type: Date },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: {
+      transform: function (doc, ret) {
+        // Keep only necessary details for GET requests
+        delete ret._id;
+        delete ret.__v;
+        delete ret.passwordHash;
+        delete ret.accessToken;
+        delete ret.verificationToken;
+        delete ret.forgotPasswordToken;
+        return ret;
+      },
+    },
+  }
 );
 
 module.exports = {

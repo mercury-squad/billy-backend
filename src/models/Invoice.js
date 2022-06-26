@@ -14,17 +14,28 @@ const Schema = require('mongoose').Schema;
 
 const InvoiceSchema = new Schema(
   {
+    invoiceNumber: { type: String, unique: true },
     status: { type: String, enum: [InvoiceStatus.draft, InvoiceStatus.scheduled, InvoiceStatus.sent] },
-    genetatedDate: { type: Date },
+    generatedDate: { type: Date },
     project: { type: Schema.Types.ObjectId, ref: 'Project' },
+    projectName: { type: String },
+    user: { type: Schema.Types.ObjectId, ref: 'User' },
     items: { type: Array },
     totalCharge: { type: Number },
     paymentDueDate: { type: Date },
     paymentStatus: { type: String },
     paymentMethod: { type: String },
   },
-  { timestamps: true },
-  { versionKey: false }
+  {
+    timestamps: true,
+    toJSON: {
+      transform: function (doc, ret) {
+        // Keep only necessary details for GET requests
+        delete ret.__v;
+        return ret;
+      },
+    },
+  }
 );
 
 module.exports = {

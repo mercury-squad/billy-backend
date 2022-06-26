@@ -14,7 +14,7 @@ const Schema = require('mongoose').Schema;
 
 const ProjectSchema = new Schema(
   {
-    name: { type: String },
+    name: { type: String, unique: true, required: true },
     description: { type: String },
     client: { type: Schema.Types.ObjectId, ref: 'Client' },
     user: { type: Schema.Types.ObjectId, ref: 'User' },
@@ -23,7 +23,16 @@ const ProjectSchema = new Schema(
     status: { type: String, enum: [ProjectStatus.open, ProjectStatus.closed] },
     rate: { type: Number },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: {
+      transform: function (doc, ret) {
+        // Keep only necessary details for GET requests
+        delete ret.__v;
+        return ret;
+      },
+    },
+  }
 );
 
 module.exports = {
