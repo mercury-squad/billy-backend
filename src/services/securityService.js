@@ -50,10 +50,9 @@ async function login(entity) {
 
   await user.save();
 
-  user = _.omit(user.toObject(), 'passwordHash', '_id', 'verificationToken', 'forgotPasswordToken', '__v');
-
   return {
     user,
+    accessToken: token,
   };
 }
 
@@ -100,8 +99,6 @@ async function signUp(entity) {
     await user.remove();
     throw ex;
   }
-
-  user = _.omit(user.toObject(), 'passwordHash', '_id', 'verificationToken', 'forgotPasswordToken', '__v');
 
   return user;
 }
