@@ -20,6 +20,13 @@ module.exports = {
   JWT_SECRET: process.env.JWT_SECRET || 'hjijfvbw859',
   JWT_EXPIRATION: process.env.JWT_EXPIRATION || '100 days',
 
+  // default page, Page starts at 1
+  DEFAULT_PAGE_INDEX: process.env.DEFAULT_PAGE_INDEX || 1,
+  // page size
+  DEFAULT_PER_PAGE: process.env.DEFAULT_PER_PAGE || 20,
+  // max page size
+  MAX_PER_PAGE: process.env.MAX_PER_PAGE || 100,
+
   emailVerificationContent: `Dear %s<br/> <br/>
   Thank you for signing up to Billy. Please click on this <a href="%s">link</a> which will validate the email address 
   that you used to register. Once you click on this link you are ready to log in. We look forward to talking with you soon.

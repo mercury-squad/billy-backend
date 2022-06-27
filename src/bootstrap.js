@@ -22,7 +22,10 @@ joi.id = () => joi.number().integer().min(1).required();
 joi.optionalId = () => joi.number().integer().min(1);
 joi.offset = () => joi.number().integer().min(0).default(0);
 joi.limit = () => joi.number().integer().min(1).default(constants.DefaultQueryLimit);
-joi.sortOrder = () => joi.string().valid('asc', 'ASC', 'desc', 'DESC').default('ASC');
+joi.page = () => joi.number().integer().positive().default(Number(config.DEFAULT_PAGE_INDEX));
+joi.perPage = () =>
+  joi.number().integer().positive().max(Number(config.MAX_PER_PAGE)).default(Number(config.DEFAULT_PER_PAGE));
+joi.sortOrder = () => joi.string().valid('asc', 'desc', 'ASC', 'DESC').default('asc');
 
 /**
  * add logger and joi schema to services
