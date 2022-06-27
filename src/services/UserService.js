@@ -74,15 +74,8 @@ updateProfile.schema = {
  */
 async function userProfile(userId) {
   let user = await helper.ensureEntityExists(models.User, { _id: userId });
-  user = _.omit(
-    user.toObject(),
-    'passwordHash',
-    '_id',
-    'verificationToken',
-    'forgotPasswordToken',
-    '__v',
-    'accessToken'
-  );
+  user = _.omit(user.toObject(), 'accessToken');
+
   return user;
 }
 

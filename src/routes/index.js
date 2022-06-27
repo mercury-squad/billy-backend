@@ -15,9 +15,10 @@ const _ = require('lodash');
 const config = require('config');
 const multer = require('multer');
 const errors = require('common-errors');
-const securityRoute = require('./securityRoute');
+const securityRoutes = require('./securityRoutes');
 const UserRoutes = require('./UserRoutes');
 const ProjectRoutes = require('./ProjectRoutes');
+const InvoiceRoutes = require('./invoiceRoutes');
 const helper = require('../common/helper');
 const logger = require('../common/logger');
 const models = require('../models');
@@ -27,7 +28,9 @@ const upload = multer({
 });
 
 const apiRouter = express.Router();
-const routes = _.extend({}, securityRoute, UserRoutes, ProjectRoutes);
+
+const routes = _.extend({}, securityRoutes, UserRoutes, InvoiceRoutes, ProjectRoutes);
+
 
 // load all routes
 _.each(routes, (verbs, url) => {
@@ -58,12 +61,14 @@ _.each(routes, (verbs, url) => {
         const user = await models.User.findOne({
           email: req.auth?.email,
         });
-        // setting user manually since the credentials are saved in 
+        // setting user manually since the credentials are saved in
         // req.auth instead of req.user
         req.user = user;
+
         if (!req.user) {
           return next(new errors.AuthenticationRequiredError('Authorization failed.'));
         }
+
         return next();
       });
 
@@ -73,12 +78,14 @@ _.each(routes, (verbs, url) => {
           let user = await models.User.findOne({
             _id: req.user.id,
           });
+
           if (!user.accessToken) {
             return next(new errors.AuthenticationRequiredError('token is invalid'));
           }
         } catch (ex) {
           return next(new errors.ValidationError('token is invalid'));
         }
+
         return next();
       });
 

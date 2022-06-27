@@ -50,10 +50,9 @@ async function login(entity) {
 
   await user.save();
 
-  user = _.omit(user.toObject(), 'passwordHash', '_id', 'verificationToken', 'forgotPasswordToken', '__v');
-
   return {
     user,
+    accessToken: token,
   };
 }
 
@@ -89,6 +88,7 @@ async function signUp(entity) {
     lastName: entity.lastName,
     verified: false,
   });
+
   user = new models.User(user);
   await user.save();
 
@@ -99,6 +99,7 @@ async function signUp(entity) {
     await user.remove();
     throw ex;
   }
+
   return user;
 }
 
@@ -119,7 +120,6 @@ signUp.schema = {
         .string()
         .regex(/^\w{5,15}$/)
         .required(),
-      confirmPassword: joi.string().required(),
     })
     .required(),
 };
