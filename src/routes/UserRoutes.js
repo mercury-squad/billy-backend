@@ -12,17 +12,17 @@
 module.exports = {
   '/user/password': {
     post: {
-      controller: 'UserController',
+      controller: 'userController',
       method: 'changePassword',
     },
   },
   '/user/me': {
     get: {
-      controller: 'UserController',
+      controller: 'userController',
       method: 'userProfile',
     },
     put: {
-      controller: 'UserController',
+      controller: 'userController',
       method: 'updateProfile',
     },
   },
