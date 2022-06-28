@@ -16,7 +16,7 @@ const config = require('config');
 const multer = require('multer');
 const errors = require('common-errors');
 const securityRoutes = require('./securityRoutes');
-const UserRoutes = require('./UserRoutes');
+const UserRoutes = require('./userRoutes');
 const ProjectRoutes = require('./projectRoutes');
 const InvoiceRoutes = require('./invoiceRoutes');
 const helper = require('../common/helper');
@@ -30,7 +30,6 @@ const upload = multer({
 const apiRouter = express.Router();
 
 const routes = _.extend({}, securityRoutes, UserRoutes, InvoiceRoutes, ProjectRoutes);
-
 
 // load all routes
 _.each(routes, (verbs, url) => {
