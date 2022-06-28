@@ -9,7 +9,7 @@
  * @version     1.0
  */
 
-const UserService = require('../services/userService');
+const userService = require('../services/userService');
 
 /**
  * handles the change password
@@ -17,7 +17,7 @@ const UserService = require('../services/userService');
  * @param {Object} res the http response
  */
 async function changePassword(req, res) {
-  res.json(await UserService.changePassword(req.user.id, req.body));
+  res.json(await userService.changePassword(req.user.id, req.body));
 }
 
 /**
@@ -26,7 +26,7 @@ async function changePassword(req, res) {
  * @param {Object} res the http response
  */
 async function updateProfile(req, res) {
-  res.json(await UserService.updateProfile(req.user.id, req.body));
+  res.json(await userService.updateProfile(req.user.id, req.body));
 }
 
 /**
@@ -35,7 +35,7 @@ async function updateProfile(req, res) {
  * @param {Object} res the http response
  */
 async function userProfile(req, res) {
-  res.json(await UserService.userProfile(req.user.id));
+  res.json(await userService.userProfile(req.user.id));
 }
 
 module.exports = {

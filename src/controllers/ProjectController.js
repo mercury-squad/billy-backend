@@ -9,15 +9,15 @@
  * @version     1.0
  */
 
-const ProjectService = require('../services/ProjectService');
+const projectService = require('../services/projectService');
 
 /**
  * handles `get` projects list
  * @param {Object} req the http request
  * @param {Object} res the http response
  */
- async function getProjectsList(req, res) {
-  res.json(await ProjectService.getProjectsList());
+async function getProjectsList(req, res) {
+  res.json(await projectService.getProjectsList());
 }
 
 /**
@@ -25,8 +25,8 @@ const ProjectService = require('../services/ProjectService');
  * @param {Object} req the http request
  * @param {Object} res the http response
  */
- async function getProjectDetails(req, res) {
-  res.json(await ProjectService.getProjectDetails(req.params.id));
+async function getProjectDetails(req, res) {
+  res.json(await projectService.getProjectDetails(req.params.id));
 }
 
 /**
@@ -35,7 +35,7 @@ const ProjectService = require('../services/ProjectService');
  * @param {Object} res the http response
  */
 async function createProject(req, res) {
-  res.json(await ProjectService.createProject(req.body));
+  res.json(await projectService.createProject(req.body));
 }
 
 /**
@@ -44,12 +44,12 @@ async function createProject(req, res) {
  * @param {Object} res the http response
  */
 async function updateProject(req, res) {
-  res.json(await ProjectService.updateProject(req.params.id, req.body));
+  res.json(await projectService.updateProject(req.params.id, req.body));
 }
 
 module.exports = {
   getProjectsList,
   getProjectDetails,
   createProject,
-  updateProject
+  updateProject,
 };

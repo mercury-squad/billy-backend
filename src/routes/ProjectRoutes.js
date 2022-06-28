@@ -12,22 +12,22 @@
 module.exports = {
   '/project': {
     get: {
-      controller: 'ProjectController',
+      controller: 'projectController',
       method: 'getProjectsList',
     },
     post: {
-      controller: 'ProjectController',
+      controller: 'projectController',
       method: 'createProject',
-    }
+    },
   },
   '/project/:id': {
     get: {
-      controller: 'ProjectController',
+      controller: 'projectController',
       method: 'getProjectDetails',
     },
     put: {
-      controller: 'ProjectController',
+      controller: 'projectController',
       method: 'updateProject',
     },
-  }
+  },
 };
