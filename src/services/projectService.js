@@ -17,7 +17,7 @@ const helper = require('../common/helper');
 /**
  * handles create project
  * @param {Object} entity the entity
- * @returns {Object} the invoice
+ * @returns {Object} the project
  */
  async function createProject(entity) {
   let newEntity = _.extend(entity, {});
@@ -63,16 +63,6 @@ updateProject.schema = {
   projectId: joi.string().required(),
   entity: joi
     .object()
-    .keys({
-      firstName: joi//change the attributes or remove them *******
-        .string()
-        .regex(/^([a-zA-Z, .'-]){3,30}$/i)
-        .required(),
-      lastName: joi
-        .string()
-        .regex(/^([a-zA-Z, .'-]){3,30}$/i)
-        .required(),
-    })
     .required(),
 };
 
@@ -83,13 +73,7 @@ updateProject.schema = {
 async function getProjectDetails(projectId) {
   let project = await helper.ensureEntityExists(Project, { _id: projectId }, `The project ${projectId} does not exist.`);
   project = _.omit(
-    project.toObject(),
-    'passwordHash',//what are these props? for a filter?
-    '_id',
-    'verificationToken',
-    'forgotPasswordToken',
-    '__v',
-    'accessToken'
+    project.toObject()
   );
   return project;
 }
