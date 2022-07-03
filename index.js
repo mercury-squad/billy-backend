@@ -28,7 +28,21 @@ const logger = require('./src/common/logger');
 const errorMiddleware = require('./src/common/ErrorMiddleware');
 
 const app = express();
-const http = require('http').Server(app);
+
+let http, https;
+
+if(config.PORT == 443){//configuration for SSL
+  const fs = require('fs');
+  const https_options = {
+    ca: fs.readFileSync("ca_bundle.crt"),
+    key: fs.readFileSync("private.key"),
+    cert: fs.readFileSync("certificate.crt")
+  };
+  https = require('https').Server(https_options, app);
+}else{ //configuration for HTTP
+  http = require('http').Server(app);
+}
+
 const routes = require('./src/routes');
 
 app.set('port', config.PORT);
@@ -64,9 +78,16 @@ app.use('*', (req, res) => {
 });
 
 if (!module.parent) {
-  http.listen(app.get('port'), () => {
-    logger.info(`Express server listening on port ${app.get('port')}`);
-  });
+  if(config.PORT == 443){
+    https.listen(app.get('port'), () => {
+      logger.info(`Express server listening on port ${app.get('port')}`);
+    });
+  }else{
+    http.listen(app.get('port'), () => {
+      logger.info(`Express server listening on port ${app.get('port')}`);
+    });
+  }
+  
 } else {
   module.exports = app;
 }
