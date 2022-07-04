@@ -17,6 +17,7 @@ const ProjectSchema = new Schema(
     name: { type: String, unique: true, required: true },
     description: { type: String },
     client: { type: Schema.Types.ObjectId, ref: 'Client' },
+    clientName: { type: String },
     user: { type: Schema.Types.ObjectId, ref: 'User' },
     startDate: { type: Date },
     endDate: { type: String },

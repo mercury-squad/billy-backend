@@ -76,6 +76,14 @@ async function search(criteria) {
   const results = await Invoice.find(filter)
     .sort(sortStr)
     .populate(['user'])
+    .populate({
+      path: 'project',
+      model: 'Project',
+      populate: {
+        path: 'client',
+        model: 'Client',
+      },
+    }) 
     .skip((criteria.page - 1) * criteria.perPage)
     .limit(criteria.perPage);
 
