@@ -16,11 +16,21 @@ const UserSchema = new Schema(
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
     address: { type: String },
+    phoneNumber: { type: String },
     companyName: { type: String },
     businessLogo: { type: String },
     profileLogo: { type: String },
     website: { type: String },
-    paymentOptions: { type: [{ type: String }] },
+    paymentOptions: {
+      type: [
+        {
+          type: {
+            name: { type: String },
+            details: { type: String },
+          },
+        },
+      ],
+    },
     passwordHash: { type: String },
     verificationToken: { type: String },
     accessToken: { type: String },
