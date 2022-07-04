@@ -31,15 +31,18 @@ const app = express();
 
 let http, https;
 
-if(config.PORT == 443){//configuration for SSL
+if (config.PORT == 443) {
+  //configuration for SSL
   const fs = require('fs');
   const https_options = {
-    ca: fs.readFileSync("ca_bundle.crt"),
-    key: fs.readFileSync("private.key"),
-    cert: fs.readFileSync("certificate.crt")
+    ca: fs.readFileSync('ca_bundle.crt'),
+    key: fs.readFileSync('private.key'),
+    cert: fs.readFileSync('certificate.crt'),
   };
+
   https = require('https').Server(https_options, app);
-}else{ //configuration for HTTP
+} else {
+  //configuration for HTTP
   http = require('http').Server(app);
 }
 
@@ -70,6 +73,7 @@ app.use(errorMiddleware());
 app.use('*', (req, res) => {
   const pathKey = req.baseUrl.substring(config.API_VERSION.length + 1);
   const route = routes[pathKey];
+
   if (route) {
     res.status(httpStatus.METHOD_NOT_ALLOWED).json({ message: 'The requested method is not supported.' });
   } else {
@@ -78,16 +82,15 @@ app.use('*', (req, res) => {
 });
 
 if (!module.parent) {
-  if(config.PORT == 443){
+  if (config.PORT == 443) {
     https.listen(app.get('port'), () => {
       logger.info(`Express server listening on port ${app.get('port')}`);
     });
-  }else{
+  } else {
     http.listen(app.get('port'), () => {
       logger.info(`Express server listening on port ${app.get('port')}`);
     });
   }
-  
 } else {
   module.exports = app;
 }
