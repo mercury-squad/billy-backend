@@ -27,12 +27,21 @@ module.exports = {
   // max page size
   MAX_PER_PAGE: process.env.MAX_PER_PAGE || 100,
 
+  // Invoice
+  INVOICE_NUMBER_PREFIX: process.env.INVOICE_NUMBER_PREFIX || 'INV',
+  CONCURRENT_INVOICE_TO_SEND: process.env.CONCURRENT_INVOICE_TO_SEND || 5,
+  // crontab format interval (run every 20 seconds)
+  CRON_JOB_RUNTIME_EXPRESSION: process.env.CRON_JOB_RUNTIME_EXPRESSION || '*/20 * * * * *',
+
   emailVerificationContent: `Dear %s<br/> <br/>
   Thank you for signing up to Billy. Please click on this <a href="%s">link</a> which will validate the email address 
   that you used to register. Once you click on this link you are ready to log in. We look forward to talking with you soon.
   <br/> <br/>If any questions or problems, please call (000) 000-0000 Or email to support@billy.com`,
   forgotPasswordContent: `Dear %s<br/> <br/>
   Please click on this <a href="%s">link</a> which will guide you through the process of changing the password.
+  <br/> <br/>If any questions or problems, please call (000) 000-0000 Or email to support@billy.com`,
+  invoiceContent: `Dear %s<br/> <br/>
+  Please find the below attached invoice for the latest payment.
   <br/> <br/>If any questions or problems, please call (000) 000-0000 Or email to support@billy.com`,
 
   email: {

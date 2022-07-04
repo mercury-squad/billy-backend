@@ -27,6 +27,23 @@ const InvoiceStatus = {
 };
 
 /**
+ * the invoice status
+ */
+const InvoiceSendOptions = {
+  draft: 'draft',
+  preview: 'preview',
+  sent: 'sent',
+};
+
+/**
+ * the invoice status
+ */
+const PaymentStatus = {
+  pending: 'pending',
+  paid: 'paid',
+};
+
+/**
  * the project status
  */
 const ProjectStatus = {
@@ -41,5 +58,7 @@ module.exports = {
   DefaultQueryLimit,
   Roles,
   InvoiceStatus,
+  InvoiceSendOptions,
+  PaymentStatus,
   ProjectStatus,
 };
