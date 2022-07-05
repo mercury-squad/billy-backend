@@ -185,7 +185,7 @@ searchInvoices.schema = {
     keyword: joi.string().trim(),
     page: joi.page(),
     perPage: joi.perPage(),
-    sortBy: joi.string().valid('name', 'status', 'paymentStatus').default('_id'),
+    sortBy: joi.string().valid('name', 'status', 'paymentStatus', 'createdAt').default('_id'),
     sortOrder: joi.sortOrder(),
   }),
 };
