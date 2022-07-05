@@ -37,7 +37,7 @@ async function getProjectDetails(req, res) {
  */
 async function createProject(req, res) {
   const client = await clientService.getClientDetails(req.body.client);
-  res.json(await projectService.createProject(req.body, client.name));
+  res.json(await projectService.createProject(req.body, client.name, req.user));
 }
 
 /**

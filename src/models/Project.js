@@ -20,7 +20,7 @@ const ProjectSchema = new Schema(
     clientName: { type: String },
     user: { type: Schema.Types.ObjectId, ref: 'User' },
     startDate: { type: Date },
-    endDate: { type: String },
+    endDate: { type: Date },
     status: { type: String, enum: [ProjectStatus.open, ProjectStatus.closed] },
     rate: { type: Number },
   },
