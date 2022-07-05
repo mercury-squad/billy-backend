@@ -18,7 +18,7 @@ const _ = require('lodash');
 const config = require('config');
 const models = require('../models');
 const helper = require('../common/helper');
-const UtilityService = require('../services/UtilityService');
+const UtilityService = require('../services/utilityService');
 
 /**
  * checks user authentication using email and password

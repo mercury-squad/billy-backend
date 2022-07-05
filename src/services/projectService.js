@@ -19,8 +19,8 @@ const helper = require('../common/helper');
  * @param {Object} entity the entity
  * @returns {Object} the project
  */
- async function createProject(entity) {
-  let newEntity = _.extend(entity, {});
+ async function createProject(entity, client) {
+  let newEntity = _.extend(entity, {clientName: client});
 
   newEntity = new Project(newEntity);
 
@@ -30,6 +30,7 @@ const helper = require('../common/helper');
 }
 
 createProject.schema = {
+  client: joi.required(),
   entity: joi
     .object()
     .required(),
@@ -39,13 +40,46 @@ createProject.schema = {
  * get all projects
  * @returns {Array} the projects
  */
- async function getProjectsList() {
-  let projects = await Project.find({});
+ async function getProjectsList(criteria) {
+  const filter = {};
 
-  return _.orderBy(projects, ['name'], ['asc']);//change the order
+  // Keyword search
+  if (criteria.keyword) {
+    filter.$or = [
+      { name: { $regex: criteria.keyword, $options: 'i' } },
+      { clientName: { $regex: criteria.keyword, $options: 'i' } },
+    ];
+  }
+
+  let sortStr = `${criteria.sortOrder.toLowerCase() === 'asc' ? '' : '-'}${criteria.sortBy}`;
+
+  if (criteria.sortBy !== '_id') {
+    sortStr += ' _id';
+  }
+
+  let projects = await Project.find(filter)
+  .populate(['client'])
+  .sort(sortStr)
+  .skip((criteria.page - 1) * criteria.perPage)
+  .limit(criteria.perPage);
+
+  return {
+    total: await Project.countDocuments(filter),
+    projects,
+    page: criteria.page,
+    perPage: criteria.perPage,
+  };
 }
 
-getProjectsList.schema = {};
+getProjectsList.schema = {
+  criteria: joi.object().keys({
+    keyword: joi.string().trim(),
+    page: joi.page(),
+    perPage: joi.perPage(),
+    sortBy: joi.string().valid('name', 'status').default('_id'),
+    sortOrder: joi.sortOrder(),
+  }),
+};
 
 /**
  * handles the update project
@@ -71,10 +105,11 @@ updateProject.schema = {
  * @param {String} projectId the project id
  */
 async function getProjectDetails(projectId) {
-  let project = await helper.ensureEntityExists(Project, { _id: projectId }, `The project ${projectId} does not exist.`);
-  project = _.omit(
-    project.toObject()
-  );
+  await helper.ensureEntityExists(Project, { _id: projectId }, `The project ${projectId} does not exist.`);
+
+  let project = await Project.findOne({_id: projectId})
+    .populate(['client', 'user']);
+    
   return project;
 }
 
