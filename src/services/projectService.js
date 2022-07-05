@@ -57,10 +57,17 @@ createProject.schema = {
     sortStr += ' _id';
   }
 
-  let projects = await Project.find({filter})
-  .sort(sortStr);
+  let projects = await Project.find(filter)
+  .sort(sortStr)
+  .skip((criteria.page - 1) * criteria.perPage)
+  .limit(criteria.perPage);
 
-  return _.orderBy(projects, ['name'], ['asc']);//change the order
+  return {
+    total: await Project.countDocuments(filter),
+    projects,
+    page: criteria.page,
+    perPage: criteria.perPage,
+  };
 }
 
 getProjectsList.schema = {
@@ -68,7 +75,7 @@ getProjectsList.schema = {
     keyword: joi.string().trim(),
     page: joi.page(),
     perPage: joi.perPage(),
-    sortBy: joi.string().valid('name', 'status').default('externalId'),
+    sortBy: joi.string().valid('name', 'status').default('_id'),
     sortOrder: joi.sortOrder(),
   }),
 };
@@ -97,8 +104,11 @@ updateProject.schema = {
  * @param {String} projectId the project id
  */
 async function getProjectDetails(projectId) {
+  await helper.ensureEntityExists(Project, { _id: projectId }, `The project ${projectId} does not exist.`);
+
   let project = await Project.findOne({_id: projectId})
     .populate(['client', 'user']);
+    
   return project;
 }
 
