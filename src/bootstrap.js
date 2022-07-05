@@ -14,12 +14,11 @@ const fs = require('fs');
 const path = require('path');
 const joi = require('joi');
 const logger = require('./common/logger');
-const helper = require('./common/helper');
 const constants = require('./constants').default;
 
 // joi validation
-joi.id = () => joi.number().integer().min(1).required();
-joi.optionalId = () => joi.number().integer().min(1);
+joi.id = () => joi.string().required();
+joi.optionalId = () => joi.string();
 joi.offset = () => joi.number().integer().min(0).default(0);
 joi.limit = () => joi.number().integer().min(1).default(constants.DefaultQueryLimit);
 joi.page = () => joi.number().integer().positive().default(Number(config.DEFAULT_PAGE_INDEX));
