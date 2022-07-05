@@ -19,8 +19,8 @@ const helper = require('../common/helper');
  * @param {Object} entity the entity
  * @returns {Object} the project
  */
- async function createProject(entity, client) {
-  let newEntity = _.extend(entity, {clientName: client});
+ async function createProject(entity, client, user) {
+  let newEntity = _.extend(entity, {clientName: client, user: user.id});
 
   newEntity = new Project(newEntity);
 
@@ -31,6 +31,7 @@ const helper = require('../common/helper');
 
 createProject.schema = {
   client: joi.required(),
+  user: joi.object().required(),
   entity: joi
     .object()
     .required(),

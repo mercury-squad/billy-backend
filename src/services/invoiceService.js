@@ -16,7 +16,7 @@ const config = require('config');
 const { Invoice, Project } = require('../models');
 const helper = require('../common/helper');
 const { InvoiceStatus, PaymentStatus, InvoiceSendOptions } = require('../constants');
-const { generateHTMLForInvoice } = require('./utilityService');
+const { generateHTMLForInvoice, convertToHTML } = require('./utilityService');
 
 /**
  * handles create invoice
@@ -185,7 +185,7 @@ searchInvoices.schema = {
     keyword: joi.string().trim(),
     page: joi.page(),
     perPage: joi.perPage(),
-    sortBy: joi.string().valid('name', 'status', 'paymentStatus').default('_id'),
+    sortBy: joi.string().valid('name', 'status', 'paymentStatus', 'createdAt').default('_id'),
     sortOrder: joi.sortOrder(),
   }),
 };
@@ -209,7 +209,9 @@ async function getInvoiceById(id) {
       },
     });
 
-  return invoice.toObject();
+  const HTMLContent = convertToHTML(invoice);
+
+  return { document: invoice.toObject(), HTMLContent };
 }
 
 getInvoiceById.schema = {
