@@ -10,6 +10,7 @@
  */
 
 const projectService = require('../services/projectService');
+const clientService = require('../services/clientService');
 
 /**
  * handles `get` projects list
@@ -17,7 +18,7 @@ const projectService = require('../services/projectService');
  * @param {Object} res the http response
  */
 async function getProjectsList(req, res) {
-  res.json(await projectService.getProjectsList());
+  res.json(await projectService.getProjectsList(req.query));
 }
 
 /**
@@ -35,7 +36,8 @@ async function getProjectDetails(req, res) {
  * @param {Object} res the http response
  */
 async function createProject(req, res) {
-  res.json(await projectService.createProject(req.body));
+  const client = await clientService.getClientDetails(req.body.client);
+  res.json(await projectService.createProject(req.body, client.name));
 }
 
 /**
