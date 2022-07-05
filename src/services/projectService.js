@@ -58,6 +58,7 @@ createProject.schema = {
   }
 
   let projects = await Project.find(filter)
+  .populate(['client'])
   .sort(sortStr)
   .skip((criteria.page - 1) * criteria.perPage)
   .limit(criteria.perPage);
