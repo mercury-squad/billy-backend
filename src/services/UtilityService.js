@@ -94,4 +94,5 @@ function convertToHTML(invoice) {
 module.exports = {
   sendEmail,
   generateHTMLForInvoice,
+  convertToHTML,
 };
