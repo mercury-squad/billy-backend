@@ -51,6 +51,11 @@ const ProjectStatus = {
   closed: 'closed',
 };
 
+/**
+ * the project status
+ */
+const DateFilterOption = ['12', '6', '3', '1'];
+
 // default data fetch limit
 const DefaultQueryLimit = 10;
 
@@ -61,4 +66,5 @@ module.exports = {
   InvoiceSendOptions,
   PaymentStatus,
   ProjectStatus,
+  DateFilterOption,
 };
