@@ -83,7 +83,7 @@ async function sendInvoiceEmails() {
 
     return invoices.length;
   } catch (error) {
-    logger.error(`******* Sending invoice for ${fileName} *******`);
+    logger.error(`******* Error while sending invoice for ${fileName} *******`);
   }
 }
 
