@@ -96,7 +96,7 @@ createInvoice.schema = {
         .required()
         .valid([InvoiceStatus.draft, InvoiceStatus.scheduled, InvoiceStatus.sent])
         .default(InvoiceStatus.draft),
-      generatedDate: joi.date().required(),
+      generatedDate: joi.date(),
       project: joi.id().required(),
       items: joi
         .array()
