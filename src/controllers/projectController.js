@@ -10,7 +10,6 @@
  */
 
 const projectService = require('../services/projectService');
-const clientService = require('../services/clientService');
 
 /**
  * handles `get` projects list
@@ -18,7 +17,7 @@ const clientService = require('../services/clientService');
  * @param {Object} res the http response
  */
 async function getProjectsList(req, res) {
-  res.json(await projectService.getProjectsList(req.query));
+  res.json(await projectService.getProjectsList(req.user, req.query));
 }
 
 /**
@@ -27,7 +26,7 @@ async function getProjectsList(req, res) {
  * @param {Object} res the http response
  */
 async function getProjectDetails(req, res) {
-  res.json(await projectService.getProjectDetails(req.params.id));
+  res.json(await projectService.getProjectDetails(req.user, req.params.id));
 }
 
 /**
@@ -36,8 +35,7 @@ async function getProjectDetails(req, res) {
  * @param {Object} res the http response
  */
 async function createProject(req, res) {
-  const client = await clientService.getClientDetails(req.body.client);
-  res.json(await projectService.createProject(req.body, client.name, req.user));
+  res.json(await projectService.createProject(req.user, req.body));
 }
 
 /**
@@ -46,7 +44,7 @@ async function createProject(req, res) {
  * @param {Object} res the http response
  */
 async function updateProject(req, res) {
-  res.json(await projectService.updateProject(req.params.id, req.body));
+  res.json(await projectService.updateProject(req.user, req.params.id, req.body));
 }
 
 module.exports = {
