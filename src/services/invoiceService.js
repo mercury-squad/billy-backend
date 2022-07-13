@@ -134,10 +134,11 @@ createInvoice.schema = {
 
 /**
  * get all invoices based on the filters
+ * @param {Object} authUser the authenticated user
  * @returns {Array} the invoices
  */
-async function searchInvoices(criteria) {
-  const filter = {};
+async function searchInvoices(authUser, criteria) {
+  const filter = { user: authUser.id };
 
   // Keyword search
   if (criteria.keyword) {
@@ -181,6 +182,7 @@ async function searchInvoices(criteria) {
 }
 
 searchInvoices.schema = {
+  authUser: joi.object().required(),
   criteria: joi.object().keys({
     keyword: joi.string().trim(),
     page: joi.page(),
@@ -192,11 +194,12 @@ searchInvoices.schema = {
 
 /**
  * get invoice by id
+ * @param {Object} authUser the authenticated user
  * @param {String} id the invoice id
  * @returns {Object} the the invoice
  */
-async function getInvoiceById(id) {
-  await helper.ensureEntityExists(Invoice, { _id: id }, `The invoice ${id} does not exist.`);
+async function getInvoiceById(authUser, id) {
+  await helper.ensureEntityExists(Invoice, { _id: id, user: authUser.id }, `The invoice ${id} does not exist.`);
 
   const invoice = await Invoice.findOne({ _id: id })
     .populate(['user'])
@@ -215,38 +218,39 @@ async function getInvoiceById(id) {
 }
 
 getInvoiceById.schema = {
+  authUser: joi.object().required(),
   id: joi.string().required(),
 };
 
 /**
  * remove invoice by id
+ * @param {Object} authUser the authenticated user
  * @param {String} id the invoice id
  */
-async function deleteById(id) {
-  await helper.ensureEntityExists(Invoice, { _id: id }, `The invoice ${id} does not exist.`);
-
-  await Invoice.deleteOne({ _id: id });
+async function deleteById(authUser, entity) {
+  await Invoice.deleteMany({ _id: { $in: entity.ids }, user: authUser.id });
 }
 
 deleteById.schema = {
-  id: joi.string().required(),
+  authUser: joi.object().required(),
+  entity: joi
+    .object()
+    .keys({ ids: joi.array().items(joi.optionalId()).required() })
+    .required(),
 };
 
 /**
+ * @param {Object} authUser the authenticated user
  * @param {String} id the invoice id
  * @param {Object} entity the invoice
  * @returns {Object} the updated entity
  */
-async function updateInvoiceByid(id, entity) {
-  const invoice = await helper.ensureEntityExists(Invoice, { _id: id }, `The invoice ${id} does not exist.`);
-
-  // if (entity.invoiceNumber !== null && entity.invoiceNumber !== '') {
-  //   await helper.ensureValueIsUnique(
-  //     Invoice,
-  //     { invoiceNumber: entity.invoiceNumber },
-  //     entity.invoiceNumber
-  //   );
-  // }
+async function updateInvoiceByid(authUser, id, entity) {
+  const invoice = await helper.ensureEntityExists(
+    Invoice,
+    { _id: id, user: authUser.id },
+    `The invoice ${id} does not exist.`
+  );
 
   _.assignIn(invoice, entity);
 
@@ -256,6 +260,7 @@ async function updateInvoiceByid(id, entity) {
 }
 
 updateInvoiceByid.schema = {
+  authUser: joi.object().required(),
   id: joi.string().required(),
   entity: joi
     .object()
