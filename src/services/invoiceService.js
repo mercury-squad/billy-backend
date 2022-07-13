@@ -12,6 +12,7 @@
 const joi = require('joi');
 const _ = require('lodash');
 const errors = require('http-errors');
+const logger = require('../common/logger');
 const config = require('config');
 const { Invoice, Project } = require('../models');
 const helper = require('../common/helper');
@@ -118,7 +119,10 @@ createInvoice.schema = {
       ),
       totalAmount: joi.number().required().default(0),
       paymentDueDate: joi.date().required(),
-      paymentStatus: joi.string().default(PaymentStatus.pending),
+      paymentStatus: joi
+        .string()
+        .valid([PaymentStatus.paid, PaymentStatus.pending, PaymentStatus.overdue])
+        .default(PaymentStatus.pending),
       paymentType: joi
         .object()
         .keys({
@@ -292,10 +296,39 @@ updateInvoiceByid.schema = {
     .required(),
 };
 
+/**
+ * checks the invoices for paymentDueDate and if it exceeds today, then change the status to overdue
+ */
+async function checkPaymentDueDateAndUpdate() {
+  try {
+    let invoices = await Invoice.find({
+      //query today up to this time
+      paymentDueDate: {
+        $lte: new Date(),
+      },
+
+      paymentStatus: PaymentStatus.pending,
+    }).limit(config.CONCURRENT_INVOICE_TO_SEND);
+
+    logger.info(`******* Found ${invoices.length} document/documents for paymentDueDate check *******`);
+
+    // change the status to overdue
+    invoices.forEach(async (invoice) => {
+      _.assignIn(invoice, { paymentStatus: PaymentStatus.overdue });
+      await invoice.save();
+    });
+
+    return invoices.length;
+  } catch (error) {
+    logger.error(`******* Error while looking for invoices *******`);
+  }
+}
+
 module.exports = {
   createInvoice,
   searchInvoices,
   getInvoiceById,
   deleteById,
   updateInvoiceByid,
+  checkPaymentDueDateAndUpdate,
 };

@@ -41,6 +41,7 @@ const InvoiceSendOptions = {
 const PaymentStatus = {
   pending: 'pending',
   paid: 'paid',
+  overdue: 'overdue',
 };
 
 /**

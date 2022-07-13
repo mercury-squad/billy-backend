@@ -45,7 +45,7 @@ async function sendInvoiceEmails() {
       })
       .limit(config.CONCURRENT_INVOICE_TO_SEND);
 
-    logger.info(`******* Found ${invoices.length} document/documents *******`);
+    logger.info(`******* Found ${invoices.length} document/documents for sending emails *******`);
 
     // for each invoice that is in scheduled state, send the email and
     // change the status to sent
