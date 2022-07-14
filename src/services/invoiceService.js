@@ -12,6 +12,7 @@
 const joi = require('joi');
 const _ = require('lodash');
 const errors = require('http-errors');
+const logger = require('../common/logger');
 const config = require('config');
 const { Invoice, Project } = require('../models');
 const helper = require('../common/helper');
@@ -96,7 +97,7 @@ createInvoice.schema = {
         .required()
         .valid([InvoiceStatus.draft, InvoiceStatus.scheduled, InvoiceStatus.sent])
         .default(InvoiceStatus.draft),
-      generatedDate: joi.date().required(),
+      generatedDate: joi.date(),
       project: joi.id().required(),
       items: joi
         .array()
@@ -118,7 +119,10 @@ createInvoice.schema = {
       ),
       totalAmount: joi.number().required().default(0),
       paymentDueDate: joi.date().required(),
-      paymentStatus: joi.string().default(PaymentStatus.pending),
+      paymentStatus: joi
+        .string()
+        .valid([PaymentStatus.paid, PaymentStatus.pending, PaymentStatus.overdue])
+        .default(PaymentStatus.pending),
       paymentType: joi
         .object()
         .keys({
@@ -134,10 +138,11 @@ createInvoice.schema = {
 
 /**
  * get all invoices based on the filters
+ * @param {Object} authUser the authenticated user
  * @returns {Array} the invoices
  */
-async function searchInvoices(criteria) {
-  const filter = {};
+async function searchInvoices(authUser, criteria) {
+  const filter = { user: authUser.id };
 
   // Keyword search
   if (criteria.keyword) {
@@ -181,6 +186,7 @@ async function searchInvoices(criteria) {
 }
 
 searchInvoices.schema = {
+  authUser: joi.object().required(),
   criteria: joi.object().keys({
     keyword: joi.string().trim(),
     page: joi.page(),
@@ -192,11 +198,12 @@ searchInvoices.schema = {
 
 /**
  * get invoice by id
+ * @param {Object} authUser the authenticated user
  * @param {String} id the invoice id
  * @returns {Object} the the invoice
  */
-async function getInvoiceById(id) {
-  await helper.ensureEntityExists(Invoice, { _id: id }, `The invoice ${id} does not exist.`);
+async function getInvoiceById(authUser, id) {
+  await helper.ensureEntityExists(Invoice, { _id: id, user: authUser.id }, `The invoice ${id} does not exist.`);
 
   const invoice = await Invoice.findOne({ _id: id })
     .populate(['user'])
@@ -215,38 +222,39 @@ async function getInvoiceById(id) {
 }
 
 getInvoiceById.schema = {
+  authUser: joi.object().required(),
   id: joi.string().required(),
 };
 
 /**
  * remove invoice by id
+ * @param {Object} authUser the authenticated user
  * @param {String} id the invoice id
  */
-async function deleteById(id) {
-  await helper.ensureEntityExists(Invoice, { _id: id }, `The invoice ${id} does not exist.`);
-
-  await Invoice.deleteOne({ _id: id });
+async function deleteById(authUser, entity) {
+  await Invoice.deleteMany({ _id: { $in: entity.ids }, user: authUser.id });
 }
 
 deleteById.schema = {
-  id: joi.string().required(),
+  authUser: joi.object().required(),
+  entity: joi
+    .object()
+    .keys({ ids: joi.array().items(joi.optionalId()).required() })
+    .required(),
 };
 
 /**
+ * @param {Object} authUser the authenticated user
  * @param {String} id the invoice id
  * @param {Object} entity the invoice
  * @returns {Object} the updated entity
  */
-async function updateInvoiceByid(id, entity) {
-  const invoice = await helper.ensureEntityExists(Invoice, { _id: id }, `The invoice ${id} does not exist.`);
-
-  // if (entity.invoiceNumber !== null && entity.invoiceNumber !== '') {
-  //   await helper.ensureValueIsUnique(
-  //     Invoice,
-  //     { invoiceNumber: entity.invoiceNumber },
-  //     entity.invoiceNumber
-  //   );
-  // }
+async function updateInvoiceByid(authUser, id, entity) {
+  const invoice = await helper.ensureEntityExists(
+    Invoice,
+    { _id: id, user: authUser.id },
+    `The invoice ${id} does not exist.`
+  );
 
   _.assignIn(invoice, entity);
 
@@ -256,6 +264,7 @@ async function updateInvoiceByid(id, entity) {
 }
 
 updateInvoiceByid.schema = {
+  authUser: joi.object().required(),
   id: joi.string().required(),
   entity: joi
     .object()
@@ -287,10 +296,39 @@ updateInvoiceByid.schema = {
     .required(),
 };
 
+/**
+ * checks the invoices for paymentDueDate and if it exceeds today, then change the status to overdue
+ */
+async function checkPaymentDueDateAndUpdate() {
+  try {
+    let invoices = await Invoice.find({
+      //query today up to this time
+      paymentDueDate: {
+        $lte: new Date(),
+      },
+
+      paymentStatus: PaymentStatus.pending,
+    }).limit(config.CONCURRENT_INVOICE_TO_SEND);
+
+    logger.info(`******* Found ${invoices.length} document/documents for paymentDueDate check *******`);
+
+    // change the status to overdue
+    invoices.forEach(async (invoice) => {
+      _.assignIn(invoice, { paymentStatus: PaymentStatus.overdue });
+      await invoice.save();
+    });
+
+    return invoices.length;
+  } catch (error) {
+    logger.error(`******* Error while looking for invoices *******`);
+  }
+}
+
 module.exports = {
   createInvoice,
   searchInvoices,
   getInvoiceById,
   deleteById,
   updateInvoiceByid,
+  checkPaymentDueDateAndUpdate,
 };

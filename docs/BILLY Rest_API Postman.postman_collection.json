@@ -1,0 +1,966 @@
+{
+	"info": {
+		"_postman_id": "80fd01b6-93f9-4f85-9a4b-42d6a3cb57b3",
+		"name": "BILLY Rest_API Postman",
+		"description": "backend api for Billy",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "4375009"
+	},
+	"item": [
+		{
+			"name": "Security",
+			"item": [
+				{
+					"name": "{{URL}}/signUp - signUp",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"if (jsonData && jsonData.accessToken) {",
+									"    postman.setEnvironmentVariable(\"token\", jsonData.accessToken);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"achilleskarki14@gmail.com\",\n    \"firstName\": \"Ashim\",\n    \"lastName\": \"Karki\",\n    \"password\": \"password\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/signUp",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"signUp"
+							]
+						},
+						"description": "sign up for the user"
+					},
+					"response": []
+				},
+				{
+					"name": "{{URL}}/login - login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"if (jsonData && jsonData.accessToken) {",
+									"    postman.setEnvironmentVariable(\"token\", jsonData.accessToken);",
+									"}",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Check the first name\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    const correctFirstName = \"test user\";",
+									"",
+									"    pm.expect(jsonData.user.firstName).to.equals(correctFirstName);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"testuser@email.com\",\n    \"password\": \"password\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"login"
+							]
+						},
+						"description": "login for the user"
+					},
+					"response": []
+				},
+				{
+					"name": "{{URL}}/logout - logout user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.status === \"OK\") {\r",
+									"    pm.environment.unset(\"token\");\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/logout",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"logout"
+							]
+						},
+						"description": "logout"
+					},
+					"response": []
+				},
+				{
+					"name": "{{URL}}/login - wrong password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"postman.setEnvironmentVariable(\"token\", jsonData.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\":\"testuser@email.com\",\n\t\"password\":\"password1\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"login"
+							]
+						},
+						"description": "login with wrong password"
+					},
+					"response": []
+				},
+				{
+					"name": "{{URL}}/login - user not found",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"postman.setEnvironmentVariable(\"token\", jsonData.token);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\":\"test\",\n\t\"password\":\"password\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"login"
+							]
+						},
+						"description": "login for user not existing"
+					},
+					"response": []
+				},
+				{
+					"name": "{{URL}}/login - email not verified",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"postman.setEnvironmentVariable(\"token\", jsonData.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\":\"testuser1@email.com\",\n\t\"password\":\"password\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"login"
+							]
+						},
+						"description": "login for user whose email is not verified"
+					},
+					"response": []
+				},
+				{
+					"name": "{{URL}}/forgotPassword - forgot password",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"aceem123@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/forgotPassword",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"forgotPassword"
+							]
+						},
+						"description": "forgot password flow"
+					},
+					"response": []
+				},
+				{
+					"name": "{{URL}}/resetPassword - reset password",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"aceem123@gmail.com\",\n    \"newPassword\":\"password\",\n    \"verificationToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyYTZkY2QzMmU5MDcwYjM0NTdjMDFkNCIsImlhdCI6MTY1NTE4NjE3OSwiZXhwIjoxNjU1MTkxMTc5fQ.nCKt5etGTdQ76G_DQTPrK3fdOHL2YuYbQEzO6x-x0Bc\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/resetPassword",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"resetPassword"
+							]
+						},
+						"description": "reset password flow"
+					},
+					"response": []
+				},
+				{
+					"name": "{{URL}}/confirmEmail - confirm email",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"achilleskarki12@gmail.com\",\n    \"verificationToken\": \"Sl2U4pL!GtaZbmW8Aa7CvSAdg\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/confirmEmail",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"confirmEmail"
+							]
+						},
+						"description": "reset password flow"
+					},
+					"response": []
+				}
+			],
+			"description": "contains all methods belongs to security (authentication)"
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "{{URL}}/user/password - change password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"newPassword\":\"password\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/user/password",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"user",
+								"password"
+							]
+						},
+						"description": "change password for logged in user"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Invoice",
+			"item": [
+				{
+					"name": "{{URL}}/invoice",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"project\": \"62ce6a5ee7237f6d8b9f561d\",\n    \"status\": \"draft\",\n    \"generatedDate\": \"2022-05-23\",\n    \"items\": [\n        {\n            \"description\": \"Test Description 1\",\n            \"quantity\": 5,\n            \"price\": 10,\n            \"amount\": 50\n        },\n        {\n            \"description\": \"Test Description 2\",\n            \"quantity\": 6,\n            \"price\": 20,\n            \"amount\": 120\n        }\n    ],\n    \"expenses\": [\n        {\n            \"description\": \"Test Description 1\",\n            \"quantity\": 5,\n            \"amount\": 50\n        },\n        {\n            \"description\": \"Test Description 2\",\n            \"quantity\": 1,\n            \"amount\": 30\n        }\n    ],\n    \"totalAmount\": 250,\n    \"paymentDueDate\": \"2022-07-15\",\n    \"paymentType\": {\n        \"name\": \"Paypal\",\n        \"details\": \"Some details about the payment.\"\n    },\n    \"notes\": \"Additional note to the invoice.\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/invoice?type=sent",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"invoice"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "sent"
+								}
+							]
+						},
+						"description": "Create new invoice"
+					},
+					"response": []
+				},
+				{
+					"name": "{{URL}}/invoice",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/invoice?page=1&perPage=10&sortBy=status&sortOrder=asc",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"invoice"
+							],
+							"query": [
+								{
+									"key": "keyword",
+									"value": "Tacos",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "perPage",
+									"value": "10"
+								},
+								{
+									"key": "sortBy",
+									"value": "status"
+								},
+								{
+									"key": "sortOrder",
+									"value": "asc"
+								}
+							]
+						},
+						"description": "Get all the invoices"
+					},
+					"response": []
+				},
+				{
+					"name": "{{URL}}/invoice/62b568071e73bdbee8fab1c9",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/invoice/62c33c75920e0dfaf4e39e73",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"invoice",
+								"62c33c75920e0dfaf4e39e73"
+							]
+						},
+						"description": "Get the invoice by ID"
+					},
+					"response": []
+				},
+				{
+					"name": "{{URL}}/invoice/62b5694cb409bfebe82fd3a3",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": \"scheduled\",\n    \"generatedDate\": \"2022-07-06\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/invoice/62c33c75920e0dfaf4e39e73",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"invoice",
+								"62c33c75920e0dfaf4e39e73"
+							]
+						},
+						"description": "Update the invoice by ID"
+					},
+					"response": []
+				},
+				{
+					"name": "{{URL}}/invoice/62b568071e73bdbee8fab1c9",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"ids\": [\n        \"62ce714dcf738fd4a77aa195\",\n        \"62ce7163cf738fd4a77aa1b2\",\n        \"62ce7176cf738fd4a77aa1cf\"\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/invoice",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"invoice"
+							]
+						},
+						"description": "Delete the invoice by ID"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Project",
+			"item": [
+				{
+					"name": "createProject - {{URL}}/project",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"My awesome project\",\n    \"description\": \"Description of the project I will be working in\",\n    \"client\": \"62ce6036c4f8640235e4cee8\",\n    \"startDate\": \"2022-06-25\",\n    \"endDate\": \"2022-10-24\",\n    \"status\": \"open\",\n    \"rate\": 23.45\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/project",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"project"
+							]
+						},
+						"description": "Create new invoice"
+					},
+					"response": []
+				},
+				{
+					"name": "listProjects - {{URL}}/project",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/project?page=1&perPage=10&sortBy=status&sortOrder=asc",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"project"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "perPage",
+									"value": "10"
+								},
+								{
+									"key": "sortBy",
+									"value": "status"
+								},
+								{
+									"key": "sortOrder",
+									"value": "asc"
+								}
+							]
+						},
+						"description": "Get all the invoices"
+					},
+					"response": []
+				},
+				{
+					"name": "getProjectDetails - {{URL}}/project/62b4e0d50501425c374a1c37",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/project/62ce6a5ee7237f6d8b9f561d",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"project",
+								"62ce6a5ee7237f6d8b9f561d"
+							]
+						},
+						"description": "Get the invoice by ID"
+					},
+					"response": []
+				},
+				{
+					"name": "updateProject - {{URL}}/invoice/62b4e0d50501425c374a1c37",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": \"open\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/project/62ce6a5ee7237f6d8b9f561d",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"project",
+								"62ce6a5ee7237f6d8b9f561d"
+							]
+						},
+						"description": "Update the invoice by ID"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Client",
+			"item": [
+				{
+					"name": "createClient - {{URL}}/client",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Tacos Company\",\n    \"contactPerson\": \"Mary Gomez\",\n    \"address\": \"1234 12 Avenue, Vancouver\",\n    \"phoneNumber\": \"7777657676\",\n    \"email\": \"mary.gomez@tacos.ca\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/client",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"client"
+							]
+						},
+						"description": "Create new invoice"
+					},
+					"response": []
+				},
+				{
+					"name": "listClients - {{URL}}/client",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/client",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"client"
+							]
+						},
+						"description": "Get all the invoices"
+					},
+					"response": []
+				},
+				{
+					"name": "getClientDetails - {{URL}}/client/62ba824303353e967478327f",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/client/62ce6036c4f8640235e4cee8",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"client",
+								"62ce6036c4f8640235e4cee8"
+							]
+						},
+						"description": "Get the invoice by ID"
+					},
+					"response": []
+				},
+				{
+					"name": "updateClient - {{URL}}/client/62ba824303353e967478327f",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Tacos Company New\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/client/62ce6036c4f8640235e4cee8",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"client",
+								"62ce6036c4f8640235e4cee8"
+							]
+						},
+						"description": "Update the invoice by ID"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Dashboard",
+			"item": [
+				{
+					"name": "{{URL}}/dashboard?filterDate=12",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/dashboard?filterDate=12",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"dashboard"
+							],
+							"query": [
+								{
+									"key": "filterDate",
+									"value": "12"
+								}
+							]
+						},
+						"description": "Gets the dashboard data"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

@@ -30,6 +30,7 @@ module.exports = {
   // Invoice
   INVOICE_NUMBER_PREFIX: process.env.INVOICE_NUMBER_PREFIX || 'INV',
   CONCURRENT_INVOICE_TO_SEND: process.env.CONCURRENT_INVOICE_TO_SEND || 5,
+  CONCURRENT_INVOICE_TO_CHECK: process.env.CONCURRENT_INVOICE_TO_CHECK || 15,
   // crontab format interval (run every 20 seconds)
   CRON_JOB_RUNTIME_EXPRESSION: process.env.CRON_JOB_RUNTIME_EXPRESSION || '*/20 * * * * *',
 
