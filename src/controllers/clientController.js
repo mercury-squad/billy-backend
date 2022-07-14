@@ -17,7 +17,7 @@ const clientService = require('../services/clientService');
  * @param {Object} res the http response
  */
 async function getClientsList(req, res) {
-  res.json(await clientService.getClientsList());
+  res.json(await clientService.getClientsList(req.user));
 }
 
 /**
@@ -26,7 +26,7 @@ async function getClientsList(req, res) {
  * @param {Object} res the http response
  */
 async function getClientDetails(req, res) {
-  res.json(await clientService.getClientDetails(req.params.id));
+  res.json(await clientService.getClientDetails(req.user, req.params.id));
 }
 
 /**
@@ -35,7 +35,7 @@ async function getClientDetails(req, res) {
  * @param {Object} res the http response
  */
 async function createClient(req, res) {
-  res.json(await clientService.createClient(req.body));
+  res.json(await clientService.createClient(req.user, req.body));
 }
 
 /**
@@ -44,7 +44,7 @@ async function createClient(req, res) {
  * @param {Object} res the http response
  */
 async function updateClient(req, res) {
-  res.json(await clientService.updateClient(req.params.id, req.body));
+  res.json(await clientService.updateClient(req.user, req.params.id, req.body));
 }
 
 module.exports = {

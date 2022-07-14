@@ -26,7 +26,7 @@ async function create(req, res) {
  * @param {Object} res the http response
  */
 async function search(req, res) {
-  res.json(await invoiceService.searchInvoices(req.query));
+  res.json(await invoiceService.searchInvoices(req.user, req.query));
 }
 
 /**
@@ -35,7 +35,7 @@ async function search(req, res) {
  * @param {Object} res the http response
  */
 async function get(req, res) {
-  res.json(await invoiceService.getInvoiceById(req.params.id));
+  res.json(await invoiceService.getInvoiceById(req.user, req.params.id));
 }
 
 /**
@@ -44,7 +44,7 @@ async function get(req, res) {
  * @param {Object} res the http response
  */
 async function remove(req, res) {
-  res.json(await invoiceService.deleteById(req.params.id));
+  res.json(await invoiceService.deleteById(req.user, req.body));
 }
 
 /**
@@ -53,7 +53,7 @@ async function remove(req, res) {
  * @param {Object} res the http response
  */
 async function update(req, res) {
-  res.json(await invoiceService.updateInvoiceByid(req.params.id, req.body));
+  res.json(await invoiceService.updateInvoiceByid(req.user, req.params.id, req.body));
 }
 
 module.exports = {
