@@ -41,6 +41,7 @@ const InvoiceSchema = new Schema(
     },
     totalAmount: { type: Number, default: 0 },
     paymentDueDate: { type: Date },
+    paymentDate: { type: Date },
     paymentStatus: {
       type: String,
       enum: [PaymentStatus.paid, PaymentStatus.pending, PaymentStatus.overdue],
