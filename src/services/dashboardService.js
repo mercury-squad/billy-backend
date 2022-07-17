@@ -41,6 +41,10 @@ async function getDashboardData(authUser, filterDate) {
         income: 0,
       },
       {
+        month: 'May',
+        income: 0,
+      },
+      {
         month: 'Jun',
         income: 0,
       },
