@@ -60,6 +60,22 @@ const DateFilterOption = ['12', '6', '3', '1'];
 // default data fetch limit
 const DefaultQueryLimit = 10;
 
+// mapping of months number and name to align with dayjs
+const monthsMapping = {
+  0: 'Jan',
+  1: 'Feb',
+  2: 'Mar',
+  3: 'Apr',
+  4: 'May',
+  5: 'Jun',
+  6: 'Jul',
+  7: 'Aug',
+  8: 'Sep',
+  9: 'Oct',
+  10: 'Nov',
+  11: 'Dec',
+};
+
 module.exports = {
   DefaultQueryLimit,
   Roles,
@@ -68,4 +84,5 @@ module.exports = {
   PaymentStatus,
   ProjectStatus,
   DateFilterOption,
+  monthsMapping,
 };

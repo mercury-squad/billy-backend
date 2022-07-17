@@ -119,6 +119,7 @@ createInvoice.schema = {
       ),
       totalAmount: joi.number().required().default(0),
       paymentDueDate: joi.date().required(),
+      paymentDate: joi.date().optional().allow(null),
       paymentStatus: joi
         .string()
         .valid([PaymentStatus.paid, PaymentStatus.pending, PaymentStatus.overdue])
@@ -288,7 +289,8 @@ updateInvoiceByid.schema = {
         })
       ),
       totalAmount: joi.number(),
-      paymentDueDate: joi.date(),
+      paymentDueDate: joi.date().allow(null),
+      paymentDate: joi.date().optional().allow(null),
       paymentStatus: joi.string(),
       paymentType: joi.string(),
       notes: joi.string(),
