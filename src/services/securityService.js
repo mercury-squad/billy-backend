@@ -130,7 +130,7 @@ signUp.schema = {
         .required(),
       password: joi
         .string()
-        .regex(/^\w{5,15}$/)
+        .regex(/^.{5,15}$/)
         .required(),
     })
     .required(),
