@@ -92,7 +92,7 @@ getProjectsList.schema = {
     keyword: joi.string().trim(),
     page: joi.page(),
     perPage: joi.perPage(),
-    sortBy: joi.string().valid('name', 'clientName', 'endDate', 'status').default('_id'),
+    sortBy: joi.string().valid('name', 'clientName', 'endDate', 'status', 'startDate').default('_id'),
     sortOrder: joi.sortOrder(),
   }),
 };
