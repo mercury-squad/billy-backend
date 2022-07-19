@@ -97,7 +97,7 @@ createInvoice.schema = {
         .required()
         .valid([InvoiceStatus.draft, InvoiceStatus.scheduled, InvoiceStatus.sent])
         .default(InvoiceStatus.draft),
-      generatedDate: joi.date(),
+      generatedDate: joi.date().allow(null),
       project: joi.id().required(),
       items: joi
         .array()
@@ -119,6 +119,7 @@ createInvoice.schema = {
       ),
       totalAmount: joi.number().required().default(0),
       paymentDueDate: joi.date().required(),
+      paymentDate: joi.date().optional().allow(null),
       paymentStatus: joi
         .string()
         .valid([PaymentStatus.paid, PaymentStatus.pending, PaymentStatus.overdue])
@@ -270,7 +271,7 @@ updateInvoiceByid.schema = {
     .object()
     .keys({
       status: joi.string().valid([InvoiceStatus.draft, InvoiceStatus.scheduled, InvoiceStatus.sent]),
-      generatedDate: joi.date(),
+      generatedDate: joi.date().allow(null),
       project: joi.optionalId(),
       items: joi.array().items(
         joi.object().keys({
@@ -288,9 +289,15 @@ updateInvoiceByid.schema = {
         })
       ),
       totalAmount: joi.number(),
-      paymentDueDate: joi.date(),
+      paymentDueDate: joi.date().allow(null),
+      paymentDate: joi.date().optional().allow(null),
       paymentStatus: joi.string(),
-      paymentType: joi.string(),
+      paymentType: joi
+        .object()
+        .keys({
+          name: joi.string().required(),
+          details: joi.string().required(),
+        }),
       notes: joi.string(),
     })
     .required(),
