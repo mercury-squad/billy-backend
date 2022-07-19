@@ -13,6 +13,7 @@ const joi = require('joi');
 const errors = require('common-errors');
 const httpStatus = require('http-status');
 const jwt = require('jsonwebtoken');
+const md5 = require('md5');
 const util = require('util');
 const _ = require('lodash');
 const config = require('config');
@@ -86,6 +87,17 @@ async function signUp(entity) {
     verificationToken,
     firstName: entity.firstName,
     lastName: entity.lastName,
+    paymentOptions: [
+      {
+        name: 'Paypal',
+        details: "Email: 'payment.secure@paypal.com'",
+      },
+      {
+        name: 'Stripe',
+        details: "Email: 'payment.secure@stripe.com'",
+      },
+    ],
+    businessLogo: `https://gravatar.com/avatar/${md5(email)}?d=identicon&f=y`,
     verified: false,
   });
 
