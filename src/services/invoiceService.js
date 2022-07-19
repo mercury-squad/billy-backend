@@ -131,7 +131,7 @@ createInvoice.schema = {
           details: joi.string().required(),
         })
         .required(),
-      notes: joi.string(),
+      notes: joi.string().allow(''),
     })
     .required(),
   type: joi.string().valid([InvoiceSendOptions.draft, InvoiceSendOptions.preview, InvoiceSendOptions.sent]),
@@ -298,7 +298,7 @@ updateInvoiceByid.schema = {
           name: joi.string().required(),
           details: joi.string().required(),
         }),
-      notes: joi.string(),
+      notes: joi.string().allow(''),
     })
     .required(),
 };
