@@ -44,7 +44,7 @@ createProject.schema = {
       client: joi.id().required(),
       startDate: joi.date().required(),
       endDate: joi.date().required(),
-      status: joi.string().required().valid([ProjectStatus.open, ProjectStatus.closed]).default(ProjectStatus.open),
+      status: joi.string().valid([ProjectStatus.open, ProjectStatus.closed]).default(ProjectStatus.open),
       rate: joi.number(),
     })
     .required(),
@@ -92,7 +92,7 @@ getProjectsList.schema = {
     keyword: joi.string().trim(),
     page: joi.page(),
     perPage: joi.perPage(),
-    sortBy: joi.string().valid('name', 'status', 'startDate').default('_id'),
+    sortBy: joi.string().valid('name', 'clientName', 'endDate', 'status').default('_id'),
     sortOrder: joi.sortOrder(),
   }),
 };

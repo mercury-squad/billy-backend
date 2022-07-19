@@ -51,14 +51,43 @@ createClient.schema = {
  * @param {Object} authUser the authenticated user
  * @returns {Array} the clients
  */
-async function getClientsList(authUser) {
-  let clients = await Client.find({ user: authUser.id });
+async function getClientsList(authUser, criteria) {
+  const filter = { user: authUser.id };
 
-  return _.orderBy(clients, ['name'], ['asc']); //change the order
+  // Keyword search
+  if (criteria.keyword) {
+    filter.$or = [{ name: { $regex: criteria.keyword, $options: 'i' } }];
+  }
+
+  let sortStr = `${criteria.sortOrder.toLowerCase() === 'asc' ? '' : '-'}${criteria.sortBy}`;
+
+  if (criteria.sortBy !== '_id') {
+    sortStr += ' _id';
+  }
+
+  let clients = await Client.find(filter)
+    .populate(['user'])
+    .sort(sortStr)
+    .skip((criteria.page - 1) * criteria.perPage)
+    .limit(criteria.perPage);
+
+  return {
+    total: await Client.countDocuments(filter),
+    clients,
+    page: criteria.page,
+    perPage: criteria.perPage,
+  };
 }
 
 getClientsList.schema = {
   authUser: joi.object().required(),
+  criteria: joi.object().keys({
+    keyword: joi.string().trim(),
+    page: joi.page(),
+    perPage: joi.perPage(),
+    sortBy: joi.string().valid('name', 'contactPerson', 'email').default('_id'),
+    sortOrder: joi.sortOrder(),
+  }),
 };
 
 /**

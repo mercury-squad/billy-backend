@@ -17,7 +17,7 @@ const clientService = require('../services/clientService');
  * @param {Object} res the http response
  */
 async function getClientsList(req, res) {
-  res.json(await clientService.getClientsList(req.user));
+  res.json(await clientService.getClientsList(req.user, req.query));
 }
 
 /**
