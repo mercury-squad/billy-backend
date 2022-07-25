@@ -230,13 +230,13 @@ getInvoiceById.schema = {
 /**
  * remove invoice by id
  * @param {Object} authUser the authenticated user
- * @param {String} id the invoice id
+ * @param {Array} entity the invoice ids
  */
-async function deleteById(authUser, entity) {
+async function deleteByIds(authUser, entity) {
   await Invoice.deleteMany({ _id: { $in: entity.ids }, user: authUser.id });
 }
 
-deleteById.schema = {
+deleteByIds.schema = {
   authUser: joi.object().required(),
   entity: joi
     .object()
@@ -292,12 +292,10 @@ updateInvoiceByid.schema = {
       paymentDueDate: joi.date().allow(null),
       paymentDate: joi.date().optional().allow(null),
       paymentStatus: joi.string(),
-      paymentType: joi
-        .object()
-        .keys({
-          name: joi.string().required(),
-          details: joi.string().required(),
-        }),
+      paymentType: joi.object().keys({
+        name: joi.string().required(),
+        details: joi.string().required(),
+      }),
       notes: joi.string().allow(''),
     })
     .required(),
@@ -335,7 +333,7 @@ module.exports = {
   createInvoice,
   searchInvoices,
   getInvoiceById,
-  deleteById,
+  deleteByIds,
   updateInvoiceByid,
   checkPaymentDueDateAndUpdate,
 };

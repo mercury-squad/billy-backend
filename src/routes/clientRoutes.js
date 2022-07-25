@@ -19,6 +19,10 @@ module.exports = {
       controller: 'clientController',
       method: 'createClient',
     },
+    delete: {
+      controller: 'clientController',
+      method: 'deleteClientsByIds',
+    },
   },
   '/client/:id': {
     get: {

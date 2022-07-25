@@ -142,9 +142,27 @@ getClientDetails.schema = {
   clientId: joi.string().required(),
 };
 
+/**
+ * remove clients by ids
+ * @param {Object} authUser the authenticated user
+ * @param {Array} entity the client ids
+ */
+async function deleteClientsByIds(authUser, entity) {
+  await Client.deleteMany({ _id: { $in: entity.ids }, user: authUser.id });
+}
+
+deleteClientsByIds.schema = {
+  authUser: joi.object().required(),
+  entity: joi
+    .object()
+    .keys({ ids: joi.array().items(joi.optionalId()).required() })
+    .required(),
+};
+
 module.exports = {
   createClient,
   getClientsList,
   updateClient,
   getClientDetails,
+  deleteClientsByIds,
 };

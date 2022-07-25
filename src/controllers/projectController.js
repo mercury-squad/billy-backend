@@ -47,9 +47,19 @@ async function updateProject(req, res) {
   res.json(await projectService.updateProject(req.user, req.params.id, req.body));
 }
 
+/**
+ * remove projects by ids
+ * @param {Object} req the http request
+ * @param {Object} res the http response
+ */
+async function deleteProjectsByIds(req, res) {
+  res.json(await projectService.deleteProjectsByIds(req.user, req.body));
+}
+
 module.exports = {
   getProjectsList,
   getProjectDetails,
   createProject,
   updateProject,
+  deleteProjectsByIds,
 };

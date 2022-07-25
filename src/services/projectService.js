@@ -155,9 +155,27 @@ getProjectDetails.schema = {
   projectId: joi.string().required(),
 };
 
+/**
+ * remove projects by ids
+ * @param {Object} authUser the authenticated user
+ * @param {Array} entity the project idspostman
+ */
+async function deleteProjectsByIds(authUser, entity) {
+  await Project.deleteMany({ _id: { $in: entity.ids }, user: authUser.id });
+}
+
+deleteProjectsByIds.schema = {
+  authUser: joi.object().required(),
+  entity: joi
+    .object()
+    .keys({ ids: joi.array().items(joi.optionalId()).required() })
+    .required(),
+};
+
 module.exports = {
   createProject,
   getProjectsList,
   updateProject,
   getProjectDetails,
+  deleteProjectsByIds,
 };

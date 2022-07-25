@@ -90,7 +90,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"testuser@email.com\",\n    \"password\": \"password\"\n}"
+							"raw": "{\n    \"email\": \"invoicebilly@gmail.com\",\n    \"password\": \"password\"\n}"
 						},
 						"url": {
 							"raw": "{{URL}}/login",
@@ -541,13 +541,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{URL}}/invoice/62c33c75920e0dfaf4e39e73",
+							"raw": "{{URL}}/invoice/62d0f8f0dabaf466d4a33a24",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
 								"invoice",
-								"62c33c75920e0dfaf4e39e73"
+								"62d0f8f0dabaf466d4a33a24"
 							]
 						},
 						"description": "Get the invoice by ID"
@@ -571,7 +571,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"status\": \"scheduled\",\n    \"generatedDate\": \"2022-07-06\"\n}",
+							"raw": "{\n    \"paymentStatus\": \"paid\",\n    \"paymentDueDate\": null,\n    \"paymentDate\": \"2022-07-13\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -579,13 +579,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{URL}}/invoice/62c33c75920e0dfaf4e39e73",
+							"raw": "{{URL}}/invoice/62d0f8f0dabaf466d4a33a24",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
 								"invoice",
-								"62c33c75920e0dfaf4e39e73"
+								"62d0f8f0dabaf466d4a33a24"
 							]
 						},
 						"description": "Update the invoice by ID"
@@ -783,6 +783,42 @@
 						"description": "Update the invoice by ID"
 					},
 					"response": []
+				},
+				{
+					"name": "deleteProjects - {{URL}}/project",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"ids\": [\n        \"62ded0f511cb6fa363e92997\"\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/project",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"project"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -918,6 +954,42 @@
 							]
 						},
 						"description": "Update the invoice by ID"
+					},
+					"response": []
+				},
+				{
+					"name": "deleteClients - {{URL}}/client",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"ids\": [\n        \"62ded0f511cb6fa363e92997\"\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/client",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"client"
+							]
+						}
 					},
 					"response": []
 				}
