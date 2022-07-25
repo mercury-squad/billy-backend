@@ -39,12 +39,12 @@ async function get(req, res) {
 }
 
 /**
- * remove invoice by id
+ * remove invoices by ids
  * @param {Object} req the http request
  * @param {Object} res the http response
  */
 async function remove(req, res) {
-  res.json(await invoiceService.deleteById(req.user, req.body));
+  res.json(await invoiceService.deleteByIds(req.user, req.body));
 }
 
 /**
