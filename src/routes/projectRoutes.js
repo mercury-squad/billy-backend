@@ -19,6 +19,10 @@ module.exports = {
       controller: 'projectController',
       method: 'createProject',
     },
+    delete: {
+      controller: 'projectController',
+      method: 'deleteProjectsByIds',
+    },
   },
   '/project/:id': {
     get: {
