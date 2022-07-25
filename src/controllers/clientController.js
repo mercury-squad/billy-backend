@@ -47,9 +47,19 @@ async function updateClient(req, res) {
   res.json(await clientService.updateClient(req.user, req.params.id, req.body));
 }
 
+/**
+ * remove clients by ids
+ * @param {Object} req the http request
+ * @param {Object} res the http response
+ */
+async function deleteClientsByIds(req, res) {
+  res.json(await clientService.deleteClientsByIds(req.user, req.body));
+}
+
 module.exports = {
   getClientsList,
   getClientDetails,
   createClient,
   updateClient,
+  deleteClientsByIds,
 };
