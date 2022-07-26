@@ -106,7 +106,7 @@ async function signUp(entity) {
 
   // send an email
   try {
-    await sendVerificationEmail(user.email, verificationToken, helper.getFrontendUrl());
+    await sendVerificationEmail(user.firstName, user.email, verificationToken, helper.getFrontendUrl());
   } catch (ex) {
     await user.remove();
     throw ex;
@@ -281,14 +281,15 @@ async function getUserByEmail(email) {
 
 /**
  * send a verification email to user
+ * @param {String} firstName the first name
  * @param {String} email the email id
  * @param {String} verificationToken the verification token
  * @param {String} hostUrl the host url
  */
-async function sendVerificationEmail(email, verificationToken, frontendUrl) {
+async function sendVerificationEmail(firstName, email, verificationToken, frontendUrl) {
   const emailContent = util.format(
     config.emailVerificationContent,
-    email,
+    firstName,
     `${frontendUrl}/confirmEmail?verificationToken=${verificationToken}&email=${email}`
   );
   const emailEntity = {
